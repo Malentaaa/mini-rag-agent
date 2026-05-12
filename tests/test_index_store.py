@@ -2,6 +2,10 @@ from app.parsers.pdf_parser import PDFParser
 from app.rag.text_splitter import TextSplitter
 from app.rag.embedder import Embedder
 from app.rag.index_store import IndexStore
+from app.core.config import (
+    INDEX_PATH,
+    CHUNKS_PATH
+)
 
 
 parser = PDFParser()
@@ -18,12 +22,12 @@ embeddings = embedder.encode(chunks)
 store.create_index(embeddings)
 
 store.save_index(
-    "storage/indexes/faiss.index"
+    str(INDEX_PATH)
 )
 
 store.save_chunks(
     chunks,
-    "storage/indexes/chunks.pkl"
+    str(CHUNKS_PATH)
 )
 
 print("INDEX SAVED")

@@ -4,11 +4,8 @@ from app.rag.embedder import Embedder
 
 
 parser = PDFParser()
-
 splitter = TextSplitter()
-
 embedder = Embedder()
-
 
 text = parser.extract_text(
     "data/docs/Статистический_анализ_данных_Теория_вероятностей.pdf"

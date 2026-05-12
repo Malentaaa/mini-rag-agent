@@ -2,6 +2,10 @@ from fastapi import APIRouter
 
 from app.schemas.rag_schema import QueryRequest
 from app.pipeline.query_pipeline import QueryPipeline
+from app.core.config import (
+    INDEX_PATH,
+    CHUNKS_PATH
+)
 
 router = APIRouter()
 pipeline = QueryPipeline()
@@ -12,8 +16,8 @@ def ask_question(
 ):
     results = pipeline.run(
         query=request.query,
-        index_path="storage/indexes/faiss.index",
-        chunks_path="storage/indexes/chunks.pkl",
+        index_path=str(INDEX_PATH),
+        chunks_path=str(CHUNKS_PATH),
         top_k=request.top_k
     )
     return {
