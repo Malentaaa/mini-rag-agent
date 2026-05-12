@@ -1,4 +1,5 @@
 import numpy as np
+from app.core.config import TOP_K
 
 
 class Retriever:
@@ -15,7 +16,7 @@ class Retriever:
     def retrieve(
         self,
         query: str,
-        top_k: int = 3
+        top_k: int = TOP_K
     ):
         query_embedding = self.embedder.encode(
             [query]

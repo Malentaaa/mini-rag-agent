@@ -1,11 +1,9 @@
 from sentence_transformers import SentenceTransformer
-
+from app.core.config import MODEL_NAME
 
 class Embedder:
     def __init__(self):
-        self.model = SentenceTransformer(
-            "sentence-transformers/all-MiniLM-L6-v2"
-        )
+        self.model = SentenceTransformer(MODEL_NAME)
 
     def encode(
         self,

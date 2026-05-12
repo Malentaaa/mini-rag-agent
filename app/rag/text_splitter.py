@@ -1,10 +1,15 @@
+from app.core.config import (
+    CHUNK_SIZE,
+    CHUNK_OVERLAP
+)
+
 class TextSplitter:
 
     def split_text(
         self,
         text: str,
-        chunk_size: int = 500,
-        overlap: int = 100
+        chunk_size: int = CHUNK_SIZE,
+        overlap: int = CHUNK_OVERLAP
     ) -> list[str]:
         chunks = []
         start = 0
