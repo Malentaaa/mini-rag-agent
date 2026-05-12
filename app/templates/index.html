@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mini RAG Agent</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="hero">
+
+        <div class="hero-content">
+
+            <div class="badge">
+                AI PDF SEARCH
+            </div>
+
+            <h1>
+                Mini RAG Agent
+            </h1>
+
+            <p class="subtitle">
+                Семантический поиск по PDF документам
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="search-card">
+
+        <form method="post">
+
+            <label>
+                Вопрос
+            </label>
+
+            <textarea
+                name="query"
+                placeholder="Например: Что такое условная вероятность?"
+                required
+            >{{ query }}</textarea>
+
+            <div class="controls">
+
+                <div class="topk-box">
+
+                    <label>
+                        Top K
+                    </label>
+
+                    <input
+                        type="number"
+                        name="top_k"
+                        min="1"
+                        max="10"
+                        value="{{ top_k or 5 }}"
+                    >
+
+                </div>
+
+                <button type="submit">
+                    Найти
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    {% if results %}
+
+    <div class="results-section">
+
+        <h2>
+            Найденные фрагменты
+        </h2>
+
+        {% for chunk in results %}
+
+        <div class="result-card">
+
+            <div class="result-number">
+                Fragment {{ loop.index }}
+            </div>
+
+            <div class="result-text">
+                {{ chunk }}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>
