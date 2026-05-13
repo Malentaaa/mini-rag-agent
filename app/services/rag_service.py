@@ -19,7 +19,7 @@ class RAGService:
         results = self.pipeline.run(
             query=query,
             index_path=str(INDEX_PATH),
-            chunks_path=str(CHUNKS_PATH),
+            records_path=str(CHUNKS_PATH),
             top_k=top_k
         )
         return results

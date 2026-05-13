@@ -25,6 +25,6 @@ class IndexService:
         self.pipeline.run(
             docs_path=str(DOCS_PATH),
             index_path=str(INDEX_PATH),
-            chunks_path=str(CHUNKS_PATH)
+            records_path=str(CHUNKS_PATH)
         )
         logger.info("Index created")
