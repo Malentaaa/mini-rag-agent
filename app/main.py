@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from app.utils.text_highlight import highlight_text
 from app.api.rag_router import router
 from app.services.index_service import IndexService
 from app.services.rag_service import RAGService
@@ -55,6 +56,13 @@ def ask(
         query=query,
         top_k=top_k
     )
+
+    for result in results:
+        result["highlighted_chunk"] = highlight_text(
+            result["chunk"],
+            query
+        )
+
     return templates.TemplateResponse(
         request,
         "index.html",
