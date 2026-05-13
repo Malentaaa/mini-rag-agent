@@ -4,6 +4,7 @@ from app.rag.retriever import Retriever
 
 
 class QueryPipeline:
+
     def __init__(self):
         self.embedder = Embedder()
         self.store = IndexStore()
@@ -12,19 +13,19 @@ class QueryPipeline:
         self,
         query: str,
         index_path: str,
-        chunks_path: str,
+        records_path: str,
         top_k: int = 3
     ):
         self.store.load_index(
             index_path
         )
-        chunks = self.store.load_chunks(
-            chunks_path
+        records = self.store.load_records(
+            records_path
         )
         retriever = Retriever(
             embedder=self.embedder,
             index_store=self.store,
-            chunks=chunks
+            records=records
         )
         results = retriever.retrieve(
             query=query,

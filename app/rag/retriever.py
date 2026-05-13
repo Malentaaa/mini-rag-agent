@@ -1,17 +1,19 @@
+import faiss
 import numpy as np
+
 from app.core.config import TOP_K
 
-
 class Retriever:
+
     def __init__(
         self,
         embedder,
         index_store,
-        chunks
+        records
     ):
         self.embedder = embedder
         self.index = index_store.index
-        self.chunks = chunks
+        self.records = records
 
     def retrieve(
         self,
@@ -21,12 +23,18 @@ class Retriever:
         query_embedding = self.embedder.encode(
             [query]
         )
+        query_embedding = np.array(
+            query_embedding
+        ).astype("float32")
+        faiss.normalize_L2(
+            query_embedding
+        )
         distances, indices = self.index.search(
-            np.array(query_embedding).astype("float32"),
+            query_embedding,
             top_k
         )
         results = []
         for idx in indices[0]:
-            chunk = self.chunks[idx]
-            results.append(chunk)
+            record = self.records[idx]
+            results.append(record)
         return results
