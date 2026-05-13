@@ -2,17 +2,18 @@ import fitz
 
 
 class PDFParser:
-
-    def extract_text(self, pdf_path: str) -> str:
-
+    
+    def extract_pages(self, pdf_path: str) -> list[dict]:
         document = fitz.open(pdf_path)
-
-        full_text = []
-
-        for page in document:
+        pages = []
+        for page_number, page in enumerate(document, start=1):
             text = page.get_text()
-            full_text.append(text)
-
+            pages.append(
+                {
+                    "source": pdf_path,
+                    "page": page_number,
+                    "text": text
+                }
+            )
         document.close()
-
-        return "\n".join(full_text)
+        return pages

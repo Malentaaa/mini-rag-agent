@@ -4,9 +4,12 @@ from app.parsers.pdf_parser import PDFParser
 from app.rag.text_splitter import TextSplitter
 from app.rag.embedder import Embedder
 from app.rag.index_store import IndexStore
+from app.core.logger import get_logger
 
+logger = get_logger(__name__)
 
 class IndexingPipeline:
+
     def __init__(self):
         self.parser = PDFParser()
         self.splitter = TextSplitter()
@@ -17,21 +20,27 @@ class IndexingPipeline:
         self,
         docs_path: str,
         index_path: str,
-        chunks_path: str
+        records_path: str
     ):
-        all_chunks = []
+
+        all_records = []
         pdf_files = Path(docs_path).glob("*.pdf")
         for pdf_path in pdf_files:
-            print(f"\nPROCESSING: {pdf_path.name}")
-            text = self.parser.extract_text(
+            logger.info(f"Processing PDF: {pdf_path.name}")
+            pages = self.parser.extract_pages(
                 str(pdf_path)
             )
-            chunks = self.splitter.split_text(text)
-            all_chunks.extend(chunks)
-        print(f"\nTOTAL CHUNKS: {len(all_chunks)}")
-        
+            records = self.splitter.split_pages(
+                pages
+            )
+            all_records.extend(records)
+        logger.info(f"Total records: {len(all_records)}")
+        chunks = [
+            record["chunk"]
+            for record in all_records
+        ]
         embeddings = self.embedder.encode(
-            all_chunks
+            chunks
         )
         self.store.create_index(
             embeddings
@@ -39,8 +48,8 @@ class IndexingPipeline:
         self.store.save_index(
             index_path
         )
-        self.store.save_chunks(
-            all_chunks,
-            chunks_path
+        self.store.save_records(
+            all_records,
+            records_path
         )
-        print("\nINDEX CREATED")
+        logger.info("Index created")

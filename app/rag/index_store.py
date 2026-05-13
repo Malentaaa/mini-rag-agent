@@ -2,7 +2,6 @@ import faiss
 import pickle
 import numpy as np
 
-
 class IndexStore:
 
     def __init__(self):
@@ -12,12 +11,11 @@ class IndexStore:
         self,
         embeddings
     ):
-
+        embeddings = np.array(embeddings).astype("float32")
+        faiss.normalize_L2(embeddings)
         dimension = embeddings.shape[1]
-        self.index = faiss.IndexFlatL2(dimension)
-        self.index.add(
-            np.array(embeddings).astype("float32")
-        )
+        self.index = faiss.IndexFlatIP(dimension)
+        self.index.add(embeddings)
 
     def save_index(
         self,
@@ -36,18 +34,18 @@ class IndexStore:
             index_path
         )
 
-    def save_chunks(
+    def save_records(
         self,
-        chunks,
-        chunks_path: str
+        records,
+        records_path: str
     ):
-        with open(chunks_path, "wb") as f:
-            pickle.dump(chunks, f)
+        with open(records_path, "wb") as f:
+            pickle.dump(records, f)
 
-    def load_chunks(
+    def load_records(
         self,
-        chunks_path: str
+        records_path: str
     ):
-        with open(chunks_path, "rb") as f:
-            chunks = pickle.load(f)
-        return chunks
+        with open(records_path, "rb") as f:
+            records = pickle.load(f)
+        return records
