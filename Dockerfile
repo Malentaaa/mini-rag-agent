@@ -2,6 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+ENV PIP_DEFAULT_TIMEOUT=1000
+ENV PIP_RETRIES=10
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     libgomp1 \
@@ -10,14 +13,13 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 COPY requirements-ml.txt .
 
-RUN pip install --upgrade pip setuptools wheel
+RUN pip install --no-cache-dir setuptools wheel
 
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir \
-    torch==2.7.0+cpu \
-    --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir --timeout 1000 --retries 10 \
+    --extra-index-url https://download.pytorch.org/whl/cpu \
+    -r requirements-ml.txt
 
-RUN pip install --no-cache-dir --timeout 1000 --retries 10 -r requirements-ml.txt
 
 COPY . .
 
