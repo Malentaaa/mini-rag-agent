@@ -29,6 +29,12 @@ app.mount(
     name="static"
 )
 
+app.mount(
+    "/docs-storage",
+    StaticFiles(directory="data/docs"),
+    name="docs-storage"
+)
+
 templates = Jinja2Templates(
     directory="app/templates"
 )
@@ -38,14 +44,6 @@ index_service.ensure_index_exists()
 rag_service = RAGService()
 page_preview_service = PagePreviewService()
 
-@app.get("/open-pdf")
-def open_pdf(source: str):
-
-    return FileResponse(
-        source,
-        media_type="application/pdf",
-        filename=Path(source).name
-    )
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
