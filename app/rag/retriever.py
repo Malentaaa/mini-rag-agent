@@ -34,7 +34,8 @@ class Retriever:
             top_k
         )
         results = []
-        for idx in indices[0]:
-            record = self.records[idx]
+        for distance, idx in zip(distances[0], indices[0]):
+            record = self.records[idx].copy()
+            record["score"] = float(distance)
             results.append(record)
         return results

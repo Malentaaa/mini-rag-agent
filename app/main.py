@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi import Request
 from fastapi import Form
+from pathlib import Path
 
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -33,6 +34,15 @@ index_service = IndexService()
 index_service.ensure_index_exists()
 rag_service = RAGService()
 
+@app.get("/open-pdf")
+def open_pdf(source: str):
+
+    return FileResponse(
+        source,
+        media_type="application/pdf",
+        filename=Path(source).name
+    )
+
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
 
@@ -57,11 +67,25 @@ def ask(
         top_k=top_k
     )
 
+    pages = {}
+
     for result in results:
-        result["highlighted_chunk"] = highlight_text(
-            result["chunk"],
-            query
+
+        key = (
+            result["source"],
+            result["page"]
         )
+
+        if key not in pages:
+
+            pages[key] = {
+                "source": result["source"],
+                "source_name": Path(result["source"]).name,
+                "page": result["page"],
+                "score": result.get("score")
+            }
+
+    page_results = list(pages.values())
 
     return templates.TemplateResponse(
         request,
@@ -69,6 +93,6 @@ def ask(
         {
             "query": query,
             "top_k": top_k,
-            "results": results
+            "results": page_results
         }
     )
