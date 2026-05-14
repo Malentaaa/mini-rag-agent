@@ -237,3 +237,23 @@ button:hover {
 
     border-radius: 4px;
 }
+
+.result-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.button-link {
+    display: inline-block;
+    text-decoration: none;
+    background: #111827;
+    color: white;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-weight: 700;
+}
+
+.button-link:hover {
+    background: #374151;
+}

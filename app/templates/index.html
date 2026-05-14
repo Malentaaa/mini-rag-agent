@@ -95,23 +95,30 @@
         <div class="result-card">
 
             <div class="result-number">
-                Fragment {{ loop.index }}
+                Страница {{ loop.index }}
             </div>
 
             <div class="result-meta">
 
-                <span>
-                    {{ result.source }}
-                </span>
-
-                <span>
-                    page {{ result.page }}
-                </span>
+                <span>{{ result.source_name }}</span>
+                <span>страница {{ result.page }}</span>
 
             </div>
 
-            <div class="result-text">
-                {{ result.highlighted_chunk | safe }}
+            <div class="result-actions">
+
+                <a 
+                    class="button-link"
+                    href="/open-pdf?source={{ result.source }}"
+                    target="_blank"
+                >
+                    Открыть PDF
+                </a>
+
+                <button type="button">
+                    Просмотреть страницу
+                </button>
+
             </div>
 
         </div>
