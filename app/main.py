@@ -7,7 +7,6 @@ from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from app.utils.text_highlight import highlight_text
 from app.api.rag_router import router
 from app.services.index_service import IndexService
 from app.services.rag_service import RAGService
