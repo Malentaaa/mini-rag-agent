@@ -3,7 +3,7 @@ from fastapi import Request
 from fastapi import Form
 from pathlib import Path
 
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -12,6 +12,9 @@ from app.api.rag_router import router
 from app.services.index_service import IndexService
 from app.services.rag_service import RAGService
 from app.core.config import TOP_K
+from app.services.page_preview_service import (
+    PagePreviewService
+)
 
 
 app = FastAPI(
@@ -33,6 +36,7 @@ templates = Jinja2Templates(
 index_service = IndexService()
 index_service.ensure_index_exists()
 rag_service = RAGService()
+page_preview_service = PagePreviewService()
 
 @app.get("/open-pdf")
 def open_pdf(source: str):
@@ -95,4 +99,22 @@ def ask(
             "top_k": top_k,
             "results": page_results
         }
+    )
+
+@app.get("/page-preview")
+def page_preview(
+    source: str,
+    page: int
+):
+
+    image_stream = (
+        page_preview_service.render_page(
+            pdf_path=source,
+            page_number=page
+        )
+    )
+
+    return StreamingResponse(
+        image_stream,
+        media_type="image/png"
     )
